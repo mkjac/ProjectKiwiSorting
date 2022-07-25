@@ -5,6 +5,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.ticker as tck
 import time
+import sys
+
+np.set_printoptions(threshold=sys.maxsize)
 
 with open('kiwidata.txt') as file:
     text = file.read()
@@ -12,18 +15,17 @@ with open('kiwidata.txt') as file:
 split = text.split(',')
 split.remove('')
 
-split = np.array(split)
-split.astype(float)
+split = np.array(split).astype(np.double)
 
 indexes = [0] * (len(split))
 
 for i in range(len(indexes)):
     indexes[i] = i
 
-selectionSorted = split.astype(np.float64)
-bubbleSorted = split.astype(np.float64)
-mergeSorted = split.astype(np.float64)
-optimizedSorted = split.astype(np.float64)
+selectionSorted = split
+bubbleSorted = split
+mergeSorted = split
+optimizedSorted = split
 
 def BubbleSort(split):
     n = len(split)
@@ -35,17 +37,18 @@ def BubbleSort(split):
                 split[j], split[j + 1] = split[j + 1], split[j]
          
         if not swapped:
-            return
+            return split
 
 def SelectionSort(split):
-    for i in range(len(split) - 1):
+    for i in range(len(split)):
   
         min_idx = i
-        for j in range(i+1, len(split) - 1):
+        for j in range(i+1, len(split)):
             if split[min_idx] > split[j]:
                 min_idx = j
     
         split[i], split[min_idx] = split[min_idx], split[i]
+    return split
 
 def merge(arr, l, m, r):
     n1 = m - l + 1
@@ -90,6 +93,7 @@ def mergeSort(arr, l, r):
         mergeSort(arr, l, m)
         mergeSort(arr, m+1, r)
         merge(arr, l, m, r)
+    return arr
 
 def MySort(arr):
     one = [0] * (len(arr))
@@ -118,24 +122,28 @@ begin = time.time()
 BubbleSort(bubbleSorted)
 end = time.time()
 bubbleSortTime = end - begin
+#print(*bubbleSorted)
 print('Bubble Sort Time: ' + str(round(bubbleSortTime, 3)) + ' seconds')
 
 begin = time.time()
-SelectionSort(selectionSorted)
+selectionSorted = SelectionSort(selectionSorted)
 end = time.time()
 selectionSortTime = end - begin
+#print(*selectionSorted)
 print('Selection Sort Time: ' + str(round(selectionSortTime, 3)) + ' seconds')
 
 begin = time.time()
-mergeSort(mergeSorted, 0, len(mergeSorted) - 1)
+mergeSorted = mergeSort(mergeSorted, 0, len(mergeSorted) - 1)
 end = time.time()
 mergeSortTime = end - begin
+#print(*mergeSorted)
 print('Merge Sort Time: ' + str(round(mergeSortTime, 3)) + ' seconds')
 
 begin = time.time()
 optimizedSorted = MySort(optimizedSorted)
 end = time.time()
 optimizedSortTime = end - begin
+print(*optimizedSorted)
 print('Optimized Sort Time: ' + str(round(optimizedSortTime, 3)) + ' seconds')
 
 if (min(selectionSortTime, bubbleSortTime, mergeSortTime, optimizedSortTime) == selectionSortTime):
