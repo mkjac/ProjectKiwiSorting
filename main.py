@@ -20,13 +20,12 @@ indexes = [0] * (len(split))
 for i in range(len(indexes)):
     indexes[i] = i
 
-selectionSorted = split.astype(np.float)
-bubbleSorted = split.astype(np.float)
-mergeSorted = split.astype(np.float)
-optimizedSorted = split.astype(np.float)
+selectionSorted = split.astype(np.float64)
+bubbleSorted = split.astype(np.float64)
+mergeSorted = split.astype(np.float64)
+optimizedSorted = split.astype(np.float64)
 
 def BubbleSort(split):
-    startTime = time.time()
     n = len(split)
     swapped = False
     for i in range(n-1):
