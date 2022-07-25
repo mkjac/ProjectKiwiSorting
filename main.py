@@ -1,18 +1,31 @@
-from select import select
+from operator import index
 import string
 import time
 import numpy as np
+import matplotlib.pyplot as plt
+import matplotlib.ticker as tck
+import time
 
 with open('kiwidata.txt') as file:
     text = file.read()
+    file.close()
 split = text.split(',')
 split.remove('')
 
-for s in split:
-    s = float(s)
+split = np.array(split)
+split.astype(float)
+
+indexes = [0] * (len(split))
+
+for i in range(len(indexes)):
+    indexes[i] = i
+
+selectionSorted = split.astype(np.float)
+bubbleSorted = split.astype(np.float)
+mergeSorted = split.astype(np.float)
+optimizedSorted = split.astype(np.float)
 
 def BubbleSort(split):
-    global bubbleSortTime
     startTime = time.time()
     n = len(split)
     swapped = False
@@ -24,21 +37,16 @@ def BubbleSort(split):
          
         if not swapped:
             return
-    endTime = time.time()
-    bubbleSortTime = np.round_(time.time() - startTime, 3)
 
 def SelectionSort(split):
-    global selectionSortTime
-    startTime = time.time()
-    for i in range(len(split)):
+    for i in range(len(split) - 1):
   
         min_idx = i
-        for j in range(i+1, len(split)):
+        for j in range(i+1, len(split) - 1):
             if split[min_idx] > split[j]:
                 min_idx = j
     
         split[i], split[min_idx] = split[min_idx], split[i]
-    selectionSortTime = np.round_(time.time() - startTime, 3)
 
 def merge(arr, l, m, r):
     n1 = m - l + 1
@@ -84,18 +92,62 @@ def mergeSort(arr, l, r):
         mergeSort(arr, m+1, r)
         merge(arr, l, m, r)
 
-def min(a, b):
-    if (a <= b):
-        return a
-    else:
-        return b
+def MySort(arr):
+    one = [0] * (len(arr))
+    myList = list(arr)
 
-BubbleSort(split)
-print('Bubble Sort Time: ' + str(bubbleSortTime) + ' seconds')
-SelectionSort(split)
-print('Selection Sort Time: ' + str(selectionSortTime) + ' seconds')
-mergeSort()
-if (min(selectionSortTime, bubbleSortTime) == selectionSortTime):
-    print('Selection Sort is Fastest at ' + str(selectionSortTime) + ' seconds')
+    for i in range(len(myList)):
+        number = min(myList)
+        one[i] = number
+        myList.remove(number)
+
+    return one
+
+def MyMin(a, b, c, d):
+    if (a <= b and a <= c and a <= d):
+        return a
+    elif (b <= a and b <= c and b <= d):
+        return b
+    elif (c <= a and c <= b and c <= d):
+        return c
+    else:
+        return d
+
+global begin
+global end
+begin = time.time()
+BubbleSort(bubbleSorted)
+end = time.time()
+bubbleSortTime = end - begin
+print('Bubble Sort Time: ' + str(round(bubbleSortTime, 3)) + ' seconds')
+
+begin = time.time()
+SelectionSort(selectionSorted)
+end = time.time()
+selectionSortTime = end - begin
+print('Selection Sort Time: ' + str(round(selectionSortTime, 3)) + ' seconds')
+
+begin = time.time()
+mergeSort(mergeSorted, 0, len(mergeSorted) - 1)
+end = time.time()
+mergeSortTime = end - begin
+print('Merge Sort Time: ' + str(round(mergeSortTime, 3)) + ' seconds')
+
+begin = time.time()
+optimizedSorted = MySort(optimizedSorted)
+end = time.time()
+optimizedSortTime = end - begin
+print('Optimized Sort Time: ' + str(round(optimizedSortTime, 3)) + ' seconds')
+
+if (min(selectionSortTime, bubbleSortTime, mergeSortTime, optimizedSortTime) == selectionSortTime):
+    print('Selection Sort is Fastest at ' + str(round(selectionSortTime, 3)) + ' seconds')
+elif (min(selectionSortTime, bubbleSortTime, mergeSortTime, optimizedSortTime) == bubbleSortTime):
+    print('Bubble Sort is Fastest at ' + str(round(bubbleSortTime, 3)) + ' seconds')
+elif(min(selectionSortTime, bubbleSortTime, mergeSortTime, optimizedSortTime) == optimizedSortTime):
+    print('Optimized Sort is Fastest at ' + str(round(optimizedSortTime, 3)) + ' seconds')
 else:
-    print('Bubble Sort is Fastest at ' + str(bubbleSortTime) + ' seconds')
+    print('Merge Sort is Fastest at ' + str(round(mergeSortTime, 3)) + ' seconds')
+
+plt.yticks(np.arange(min(optimizedSorted), max(optimizedSorted), 0.5))
+plt.scatter(indexes, optimizedSorted)
+plt.show()
