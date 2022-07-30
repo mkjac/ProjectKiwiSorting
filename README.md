@@ -1,5 +1,5 @@
 # ProjectKiwiSorting
-My week 1 assignment for Python term
+My week 1 assignment for Python term 3
 
 Required Internal Packages:
 - time
