@@ -1,6 +1,5 @@
-import numpy as np
 import sys
-import time
+import numpy as np
 import matplotlib.pyplot as plt
 
 # Make the print able to print the maximum amount of characters
@@ -11,7 +10,6 @@ np.set_printoptions(threshold=sys.maxsize)
 # 3) Close the file
 with open('kiwidata.txt') as file:
     text = file.read()
-    file.close()
 
 # 1) Declare a global variable called split
 # 2) Set split to be a string array containg text, split based on the seperator ','
@@ -28,46 +26,51 @@ indexes = [0] * (len(split))
 for i in range(len(indexes)):
     indexes[i] = i
 
-# Bubble Sort Function
+# Copy data array into seperate arrays for each algorithm
+bubbleSorted = np.copy(split)
+selectionSorted = np.copy(split)
+mergeSorted = np.copy(split)
+
+#################
+## BUBBLE SORT ##
+#################
 
 
 def BubbleSort(array):
-    # Copy the array passed into the function to sorting array
-    sorting = np.copy(array)
-    # While sorting array is not sorted...
-    while(np.array_equal(np.sort(sorting), sorting) == False):
+    # While array is not sorted...
+    while(np.array_equal(np.sort(array), array) == False):
         # Iterate from 0 to the length of the array - 1
         for i in range(len(array) - 1):
             # If the current item is greater than the next item, swap the items
-            if(sorting[i] > sorting[i + 1]):
-                temp = sorting[i]
-                sorting[i] = sorting[i + 1]
-                sorting[i + 1] = temp
+            if(array[i] > array[i + 1]):
+                temp = array[i]
+                array[i] = array[i + 1]
+                array[i + 1] = temp
     # Return the sorted array
-    return sorting
+    return array
 
-# Selection Sort Function
+####################
+## SELECTION SORT ##
+####################
 
 
 def SelectionSort(array):
+    length = len(array)
     # Iterate from 0 to the length of the array
-    for i in range(0, len(array)):
+    for i in range(length - 1):
         # Set current minimum index to i
         minIndex = i
         # Iterate from i to the length of the array
-        for j in range(i + 1, len(array)):
+        for j in range(i + 1, length):
+            minIndex = i
             # If item at index j is less than current minimum item
             # Set minimum index to position j
             if (array[j] < array[minIndex]):
                 minIndex = j
             # Swap the items
-            temp = array[i]
-            array[i] = array[minIndex]
-            array[minIndex] = temp
+            array[i], array[minIndex] = array[minIndex], array[i]
     # Return sorted array
     return array
-
-# Merge Function
 
 
 def merge(array, left, middle, right):
@@ -155,124 +158,28 @@ def mergeSort(array, left, right):
     # Return the sorted array
     return array
 
-# My Optimized Sort
 
+# BubbleSort(bubbleSorted)
+#mergeSort(mergeSorted, 0, len(mergeSorted) - 1)
 
-def MySort(array):
-    # Create array with length of the original array to store final sorted values
-    one = [0] * (len(array))
-    # Create list copy of original array
-    myList = list(array)
-
-    # For loop that iterates through the length of the list times
-    for i in range(len(myList)):
-        # Set current number equal to the minimum value in the list
-        number = min(myList)
-        # Set the current index of one array equal to the minimum number
-        one[i] = number
-        # Remove the minimum number from the list
-        myList.remove(number)
-    # Return sorted array
-    return one
-
-# Print Time Function
-
-
-def PrintTime(text, time):
-    # Print the text, which is which algorithm it is,
-    # plus 'took' and then the time, converted into a string,
-    # to 3 decimal places, plus ' seconds'
-    print(text + ' took ' + str(np.round(time, 3)) + ' seconds')
-
-
-# Copy the original array into seperate arrays for sorting
-bubbleSorted = np.copy(split)
-selectionSorted = np.copy(split)
-mergeSorted = np.copy(split)
-optimizedSorted = np.copy(split)
-
-#################
-## BUBBLE SORT ##
-#################
-
-# Store the time before function started
-begin = time.time()
-# Set the bubbleSorted array equal to the bubble sorted array
 bubbleSorted = BubbleSort(bubbleSorted)
-# Store the time after the function has ended
-end = time.time()
-# Set bubbleTime to the time the function took to execute
-bubbleTime = end - begin
+#selectionSorted = SelectionSort(selectionSorted)
+#mergeSorted = mergeSort(mergeSorted, 0, len(mergeSorted) - 1)
 
-####################
-## SELECTION SORT ##
-####################
+# Sorted Data Graph
+plt.figure(1)
+plt.title('Kiwi Weights')
+plt.yticks(np.arange(min(bubbleSorted), max(bubbleSorted), 0.2))
+plt.ylabel('Kiwi Weight')
+plt.xlabel('Kiwi ID Number')
+plt.scatter(indexes, bubbleSorted)
 
-# Store the time before function started
-begin = time.time()
-# Set the selectionSorted array equal to the selection sorted array
-selectionSorted = SelectionSort(selectionSorted)
-# Store the time after the function has ended
-end = time.time()
-# Set selectionTime to the time the function took to execute
-selectionTime = end - begin
+# Unsorted Data Graph
+plt.figure(2)
+plt.title('Kiwi Weights')
+plt.yticks(np.arange(min(split), max(split), 0.2))
+plt.ylabel('Kiwi Weight')
+plt.xlabel('Kiwi ID Number')
+plt.scatter(indexes, split)
 
-################
-## MERGE SORT ##
-################
-
-# Store the time before function started
-begin = time.time()
-# Set the mergeSorted array equal to the merge sorted array
-mergeSorted = mergeSort(mergeSorted, 0, len(mergeSorted) - 1)
-# Store the time after the function has ended
-end = time.time()
-# Set mergeTime to the time the function took to execute
-mergeTime = end - begin
-
-####################
-## OPTIMIZED SORT ##
-####################
-
-# Store the time before function started
-begin = time.time()
-# Set the optimizedSorted array equal to the optimized sorted array
-optimizedSorted = MySort(optimizedSorted)
-# Store the time after the function has ended
-end = time.time()
-# Set optimizedTime to the time the function took to execute
-optimizedTime = end - begin
-
-# Prints each of the sorted arrays
-# print(*bubbleSorted)
-# print(*selectionSorted)
-# print(*mergeSorted)
-# print(*optimizedSorted)
-
-# Prints the time each function took to complete
-PrintTime('Bubble Sort', bubbleTime)
-PrintTime('Selection Sort', selectionTime)
-PrintTime('Merge Sort', mergeTime)
-PrintTime('Optimized Sort', optimizedTime)
-
-# Sets the time of the fastest algorithm
-fastest = min([bubbleTime, selectionTime, mergeTime, optimizedTime])
-
-# Sets fastestFunc to be the text specifying the name of the fastest function
-if (fastest == bubbleTime):
-    fastestFunc = 'Bubble Sort'
-elif (fastest == selectionTime):
-    fastestFunc = 'Selection Sort'
-elif (fastest == mergeTime):
-    fastestFunc = 'Merge Sort'
-else:
-    fastestFunc = 'Optimized Sort'
-
-# Print which function time was the fastest
-print('The fastest was ' + fastestFunc + ' which took ' +
-      str(np.round(fastest, 3)) + ' seconds')
-
-# Plot the data as a scatter graph
-plt.yticks(np.arange(min(optimizedSorted), max(optimizedSorted), 0.5))
-plt.scatter(indexes, optimizedSorted)
 plt.show()
