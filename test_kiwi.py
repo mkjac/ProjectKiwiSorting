@@ -42,6 +42,7 @@ reversedData = np.array(np.copy(sortedData))[::-1]
 
 def test_WorstBubbleSort():
     begin = time.time()
+    # BubbleSort(reversedData) == sortedData
     assert np.array_equal(BubbleSort(np.copy(reversedData)), sortedData)
     print('\nTime taken: ' +
           str(np.round(time.time() - begin, 3)) + ' seconds')

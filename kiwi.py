@@ -16,7 +16,13 @@ with open('kiwidata.txt') as file:
 # 3) Remove all empty values from split array
 global split
 split = text.split(',')
-split.remove('')
+global empty
+empty = False
+for i in split:
+    if i == '':
+        empty = True
+if empty:
+    split.remove('')
 
 # Set split to be a numpy array of type float64
 split = np.array(split).astype(np.float64)
@@ -159,12 +165,13 @@ def mergeSort(array, left, right):
     return array
 
 
-# BubbleSort(bubbleSorted)
-#mergeSort(mergeSorted, 0, len(mergeSorted) - 1)
-
 bubbleSorted = BubbleSort(bubbleSorted)
-#selectionSorted = SelectionSort(selectionSorted)
-#mergeSorted = mergeSort(mergeSorted, 0, len(mergeSorted) - 1)
+selectionSorted = SelectionSort(selectionSorted)
+mergeSorted = mergeSort(mergeSorted, 0, len(mergeSorted) - 1)
+
+print(bubbleSorted)
+print(*selectionSorted)
+print(*mergeSorted)
 
 # Sorted Data Graph
 plt.figure(1)
